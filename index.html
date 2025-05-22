@@ -51,12 +51,13 @@
     <h2>Escala de Braden</h2>
     <p>Preencha os fatores de risco para obter a pontuação:</p>
     <ul>
-      <li><label>Sensibilidade: <input type="number" min="1" max="4"></label></li>
+      <li><label>Percepção Sensorial<input type="number" min="1" max="4"></label></li>
       <li><label>Umidade: <input type="number" min="1" max="4"></label></li>
-      <li><label>Atividade: <input type="number" min="1" max="4"></label></li>
+      <li><label>Grau de Atividade <input type="number" min="1" max="4"></label></li>
       <li><label>Mobilidade: <input type="number" min="1" max="4"></label></li>
       <li><label>Nutrição: <input type="number" min="1" max="4"></label></li>
       <li><label>Fricção/Cisalhamento: <input type="number" min="1" max="3"></label></li>
+      <li><label>Perfusão Tissular e oxigenação <input type="number" min="1" max="3"></label></li>
     </ul>
     <button type="button" onclick="calcularPontuacao()">Calcular Pontuação</button>
   </section>
@@ -79,10 +80,46 @@
 
 <section class="avaliacao-lesao-section" style="display:none;">
   <h2>Avaliação do Estágio da Lesão</h2>
-  <p><strong>Estágio I:</strong> Eritema não branqueável, pele intacta.</p>
-  <p><strong>Estágio II:</strong> Perda parcial da derme, abrasão ou bolha.</p>
-  <p><strong>Estágio III:</strong> Perda total da pele, possível exposição de gordura.</p>
-  <p><strong>Estágio IV:</strong> Perda extensa com exposição de músculo, osso ou tendão.</p>
+  <div class="estagio-opcao">
+    <img src="img/ulcera1.jpg" alt="Estágio I">
+    <p><strong>Estágio I:</strong> Eritema não branqueável, pele intacta.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/ulcera2.png" alt="Estágio II">
+    <p><strong>Estágio II:</strong> Perda parcial da derme, abrasão ou bolha.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/ulcera3.png" alt="Estágio III">
+    <p><strong>Estágio III:</strong> Perda total da pele, possível exposição de gordura.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/ulcera4.png" alt="Estágio IV">
+    <p><strong>Estágio IV:</strong> Perda extensa com exposição de músculo, osso ou tendão.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/nclasse.png" alt="Não Classificável">
+    <p><strong>Não Classificável:</strong> Cobertura com esfacelo ou necrose.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/lesprofunda.png" alt="Pressão Tissular Profunda">
+    <p><strong>Pressão Tissular Profunda:</strong> Lesão sob pele intacta, escurecida ou arroxeada.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/lesmedico.png" alt="Relacionada a Dispositivos Médicos">
+    <p><strong>Relacionada a Dispositivos Médicos:</strong> Lesão no formato ou pressão de dispositivos.</p>
+  </div>
+
+  <div class="estagio-opcao">
+    <img src="img/lesmucosas.png" alt="Pressão em Membranas Mucosas">
+    <p><strong>Pressão em Membranas Mucosas:</strong> Ocorrência em locais como boca, nariz, genitais.</p>
+  </div>
+
   <label><strong>Selecione o estágio:</strong></label><br>
   <select id="estagioLesao">
     <option value="">Selecione</option>
@@ -90,6 +127,10 @@
     <option value="II">Estágio II</option>
     <option value="III">Estágio III</option>
     <option value="IV">Estágio IV</option>
+    <option value="Não Classificável">Não Classificável</option>
+    <option value="Pressão Tissular Profunda">Pressão Tissular Profunda</option>
+    <option value="Relacionada a Dispositivos Médicos">Relacionada a Dispositivos Médicos</option>
+    <option value="Pressão em Membranas Mucosas">Pressão em Membranas Mucosas</option>
   </select><br><br>
   <button onclick="abrirTratamento()">→ Ir para Tratamento</button>
 </section>
@@ -97,8 +138,14 @@
 <section class="tratamento-lesao-section" style="display:none;">
   <h2>Plano de Tratamento</h2>
   <div id="tratamentoConteudo"></div>
+
+  <h3>Conduta do Enfermeiro</h3>
+  <textarea id="condutaEnfermeiro" placeholder="Descreva a conduta adotada..." rows="5" style="width:100%; padding:10px;"></textarea>
+
+  <br><br>
   <button onclick="finalizarTratamento()">Aplicar Tratamento</button>
 </section>
+
 
   <footer>
     <p>Projeto acadêmico baseado no artigo ENFERBRADEN - UCE Segurança do Paciente</p>

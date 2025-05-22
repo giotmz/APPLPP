@@ -65,8 +65,10 @@ function calcularPontuacao() {
 
   let risco = "Alto risco";
   if (total >= 19) risco = "Sem risco";
-  else if (total >= 15) risco = "Risco moderado";
-  else if (total >= 12) risco = "Risco elevado";
+  else if (total >= 15) risco = "Médio Risco";
+  else if (total >= 13) risco = "Risco moderado";
+  else if (total >=10) risco = "Alto Risco";
+  else if (total >=9) risco = "Altíssimo Risco";
 
   pacientes[pacienteAtualIndex].braden = dados;
   pacientes[pacienteAtualIndex].bradenPontuacao = total;
@@ -162,6 +164,8 @@ function abrirHistorico(index) {
     <strong>Braden:</strong> ${p.bradenRisco || "Não avaliado"}<br>
     <strong>Lesões:</strong> ${p.lesoes?.join(", ") || "Nenhuma"}<br>
     <strong>Tratamento Aplicado:</strong> ${p.tratamentoAplicado ? "Sim" : "Não"}
+    <strong>Conduta do Enfermeiro:</strong> ${p.conduta || "Não registrada"}<br>
+
   `;
 
   document.getElementById("historicoDetalhes").innerHTML = historico;
@@ -188,28 +192,104 @@ function abrirTratamento() {
   pacientes[pacienteAtualIndex].estagioLesao = estagio;
 
   const planos = {
-    I: "Higienização local, hidratação e mudanças de decúbito.",
-    II: "Limpeza da ferida, cobertura com curativos hidrocoloides.",
-    III: "Desbridamento e curativos especiais com acompanhamento médico.",
-    IV: "Intervenção multidisciplinar com possível intervenção cirúrgica."
+    I: `
+      <h4>Estágio I</h4>
+      <p><strong>Materiais:</strong> Espuma de Hidropolímero, Hidrocolóide transparente, Filme transparente.</p>
+      <p><strong>Cuidados:</strong></p>
+      <ul>
+        <li>Diferenciar de Dermatite Associada à Incontinência (DAI)</li>
+        <li>Diminuir forças de pressão, fricção e cisalhamento</li>
+        <li>Proteger contra umidade</li>
+        <li>Permitir visualização da lesão sem retirada da cobertura</li>
+      </ul>
+    `,
+    II: `
+      <h4>Estágio II</h4>
+      <p><strong>Materiais:</strong> Espuma de Hidropolímero, Hidrocolóide.</p>
+      <p><strong>Cuidados:</strong></p>
+      <ul>
+        <li>Absorver exsudato leve/médio</li>
+        <li>Reduzir pressão, fricção e cisalhamento</li>
+        <li>Barreira contra umidade, bactérias e vírus</li>
+      </ul>
+    `,
+    III: `
+      <h4>Estágio III</h4>
+      <p><strong>Cobertura primária:</strong> Hidrofibra com prata, Alginato de cálcio e sódio, Carvão ativado com prata, Espuma de poliuretano com prata</p>
+      <p><strong>Cobertura secundária:</strong> Espuma de hidropolímero</p>
+      <p><strong>Cuidados:</strong></p>
+      <ul>
+        <li>Absorção de exsudato moderado</li>
+        <li>Preenchimento de cavidade</li>
+        <li>Controle bacteriano e viral</li>
+        <li>Redução da pressão e fricção</li>
+      </ul>
+    `,
+    IV: `
+      <h4>Estágio IV</h4>
+      <p><strong>Cobertura primária:</strong> Hidrofibra com prata, Alginato de cálcio e sódio, Carvão ativado com prata, Espuma de poliuretano</p>
+      <p><strong>Cobertura secundária:</strong> Gaze ou coxim (troca diária)</p>
+      <p><strong>Cuidados:</strong></p>
+      <ul>
+        <li>Absorção de exsudato elevado</li>
+        <li>Preenchimento de 70% da cavidade</li>
+        <li>Redução de pressão e controle de infecção</li>
+      </ul>
+    `,
+    "Não Classificável": `
+      <h4>Lesão Não Classificável</h4>
+      <p><strong>Desbridamento autolítico:</strong> Hidrocolóide, Hidrogel</p>
+      <p><strong>Desbridamento enzimático:</strong> Colagenase</p>
+      <p><strong>Observação:</strong> Avaliar necessidade de desbridamento cirúrgico.</p>
+    `,
+    "Pressão Tissular Profunda": `
+      <h4>Lesão por Pressão Tissular Profunda</h4>
+      <ul>
+        <li>Hidratar a pele</li>
+        <li>Não aplicar cobertura para permitir observação</li>
+        <li>Calcâneos devem ficar flutuantes</li>
+        <li>Rompimento de flictema se exsudato purulento</li>
+      </ul>
+    `,
+    "Relacionada a Dispositivos Médicos": `
+      <h4>Lesão Relacionada a Dispositivos Médicos</h4>
+      <ul>
+        <li>Prevenção com hidrocolóide ou espuma de hidropolímero</li>
+        <li>Reduzir pressão de dispositivos</li>
+        <li>Utilizar fixadores adesivos específicos</li>
+        <li>Tratar lesão conforme avaliação do enfermeiro</li>
+      </ul>
+    `,
+    "Pressão em Membranas Mucosas": `
+      <h4>Lesão em Membranas Mucosas</h4>
+      <p><strong>Conduta:</strong> Regeneração natural, avaliar com cuidado. Tratamento conforme julgamento clínico do enfermeiro.</p>
+    `
   };
 
-  tratamentoConteudo.innerHTML = `
-    <p><strong>Tratamento para Estágio ${estagio}:</strong></p>
-    <p>${planos[estagio]}</p>
-  `;
+  tratamentoConteudo.innerHTML = planos[estagio] || "<p>Tratamento não encontrado para este estágio.</p>";
+  document.getElementById("condutaEnfermeiro").value = "";
 
   ocultarTodasAsSecoes();
   document.querySelector(".tratamento-lesao-section").style.display = "block";
 }
 
+
 function finalizarTratamento() {
+  const conduta = document.getElementById("condutaEnfermeiro").value.trim();
+  if (!conduta) {
+    alert("Descreva a conduta do enfermeiro antes de finalizar o tratamento.");
+    return;
+  }
+
   pacientes[pacienteAtualIndex].tratamentoAplicado = true;
-  alert("Tratamento registrado com sucesso. O paciente agora pode ter alta.");
+  pacientes[pacienteAtualIndex].conduta = conduta;
+
+  alert("Tratamento aplicado com sucesso.");
   atualizarListaPacientes();
   ocultarTodasAsSecoes();
   document.querySelector(".pacientes-section").style.display = "block";
 }
+
 
 function ocultarTodasAsSecoes() {
   document.querySelectorAll("section").forEach(sec => sec.style.display = "none");

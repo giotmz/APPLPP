@@ -1,12 +1,17 @@
 const pacientes = [];
+function ocultarTodasAsSecoes() {
+  document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
+  document.querySelector(".pacientes-section").style.display = "block";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  ocultarTodasAsSecoes();
+});
+
 let pacienteAtualIndex = -1;
 
 function mostrarCadastro() {
+  ocultarTodasAsSecoes();
   document.getElementById("cadastroSection").style.display = "block";
-  document.getElementById("admissaoSection").style.display = "none";
-  document.querySelector(".braden-section").style.display = "none";
-  document.querySelector(".lesao-section").style.display = "none";
-  document.querySelector(".alarme-section").style.display = "none";
 }
 
 document.getElementById("pacienteForm").addEventListener("submit", function (event) {
@@ -120,7 +125,7 @@ function atualizarListaPacientes() {
         <button onclick="abrirHistorico(${index})">Histórico</button>
 ${pacientes[index].tratamentoAplicado ? `<button onclick="darAlta(${index})">Dar alta</button>` : `<span style="color: red;">Tratamento pendente</span>`}
 
-       
+
 
       </div>
     `;

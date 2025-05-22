@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>ENFERBRADEN</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>ENFERBRADEN</h1>
+    <p>Aplicativo de apoio à prevenção e tratamento de lesões por pressão</p>
+  </header>
+
+  <section class="pacientes-section">
+    <h2>Lista de Pacientes</h2>
+    <ul id="listaPacientes"></ul>
+    <button onclick="mostrarCadastro()">+ Novo Cadastro</button>
+  </section>
+
+  <section class="form-section" id="cadastroSection" style="display: none;">
+    <h2>Cadastro de Paciente</h2>
+    <form id="pacienteForm">
+      <input type="text" id="nomePaciente" placeholder="Nome do Paciente" required>
+      <input type="text" id="prontuarioPaciente" placeholder="Número do Prontuário" required>
+      <button type="submit">Cadastrar</button>
+      
+    </form>
+  </section>
+    <section class="admissao-section" id="admissaoSection" style="display:none;">
+  <h2>Admissão do Paciente</h2>
+  <form id="admissaoForm">
+    <h3>Histórico de Comorbidades</h3>
+    <label><input type="checkbox" name="comorbidades" value="Diabetes"> Diabetes</label>
+    <label><input type="checkbox" name="comorbidades" value="Hipertensão"> Hipertensão</label>
+    <label><input type="checkbox" name="comorbidades" value="Doença Renal"> Doença Renal</label>
+
+    <h3>Estado Atual do Paciente</h3>
+    <label><input type="checkbox" name="estado" value="Acamado"> Acamado</label>
+    <label><input type="checkbox" name="estado" value="Consciente"> Consciente</label>
+    <label><input type="checkbox" name="estado" value="Desorientado"> Desorientado</label>
+
+    <h3>Dispositivos em Uso</h3>
+    <label><input type="checkbox" name="dispositivos" value="Sonda Vesical"> Sonda Vesical</label>
+    <label><input type="checkbox" name="dispositivos" value="Oxigenoterapia"> Oxigenoterapia</label>
+    <label><input type="checkbox" name="dispositivos" value="Cateter Central"> Cateter Central</label>
+
+    <button onclick="atualizarListaPacientes()">Prosseguir para Escala de Braden</button>
+  </form>
+</section>
+  <section class="braden-section">
+    <h2>Escala de Braden</h2>
+    <p>Preencha os fatores de risco para obter a pontuação:</p>
+    <ul>
+      <li><label>Sensibilidade: <input type="number" min="1" max="4"></label></li>
+      <li><label>Umidade: <input type="number" min="1" max="4"></label></li>
+      <li><label>Atividade: <input type="number" min="1" max="4"></label></li>
+      <li><label>Mobilidade: <input type="number" min="1" max="4"></label></li>
+      <li><label>Nutrição: <input type="number" min="1" max="4"></label></li>
+      <li><label>Fricção/Cisalhamento: <input type="number" min="1" max="3"></label></li>
+    </ul>
+    <button type="button" onclick="calcularPontuacao()">Calcular Pontuação</button>
+  </section>
+   <section class="lesao-section">
+    <h2>Demarcação de Lesões</h2>
+    <p>Marque áreas com risco ou já lesionadas:</p>
+    <button type="button" onclick="marcarLesao('Face Anterior')">Face Anterior</button>
+  <button type="button" onclick="marcarLesao('Face Posterior')">Face Posterior</button>
+  </section>
+   <section class="alarme-section">
+    <h2>Alarme de Mudança de Decúbito</h2>
+    <p>Lembrete configurado para cada 2 horas.</p>
+    <button type="button" onclick="ativarAlarme()">Ativar Alarme</button>
+  </section>
+<section class="historico-section" style="display:none;">
+  <h2>Histórico do Paciente</h2>
+  <div id="historicoDetalhes"></div>
+  <button onclick="abrirAvaliacaoLesao()">→ Avaliar Lesão</button>
+</section>
+
+<section class="avaliacao-lesao-section" style="display:none;">
+  <h2>Avaliação do Estágio da Lesão</h2>
+  <p><strong>Estágio I:</strong> Eritema não branqueável, pele intacta.</p>
+  <p><strong>Estágio II:</strong> Perda parcial da derme, abrasão ou bolha.</p>
+  <p><strong>Estágio III:</strong> Perda total da pele, possível exposição de gordura.</p>
+  <p><strong>Estágio IV:</strong> Perda extensa com exposição de músculo, osso ou tendão.</p>
+  <label><strong>Selecione o estágio:</strong></label><br>
+  <select id="estagioLesao">
+    <option value="">Selecione</option>
+    <option value="I">Estágio I</option>
+    <option value="II">Estágio II</option>
+    <option value="III">Estágio III</option>
+    <option value="IV">Estágio IV</option>
+  </select><br><br>
+  <button onclick="abrirTratamento()">→ Ir para Tratamento</button>
+</section>
+
+<section class="tratamento-lesao-section" style="display:none;">
+  <h2>Plano de Tratamento</h2>
+  <div id="tratamentoConteudo"></div>
+  <button onclick="finalizarTratamento()">Aplicar Tratamento</button>
+</section>
+
+  <footer>
+    <p>Projeto acadêmico baseado no artigo ENFERBRADEN - UCE Segurança do Paciente</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

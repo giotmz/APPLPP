@@ -90,14 +90,15 @@ function ativarAlarme() {
   const paciente = pacientes[pacienteAtualIndex];
   if (!paciente.alarmeAtivo) {
     paciente.alarmeAtivo = true;
-    alarmeIntervalo = setInterval(() => {
-      alert(`🔔 Hora de mudar o decúbito do paciente: ${paciente.nome}`);
-    }, 2 * 60 * 60 * 1000);
-    alert("Alarme ativado!");
+    paciente.alarmeInicio = new Date(); 
+    paciente.alarmeTimer = setInterval(() => {
+      alert(`🔔 Atenção: chegou o momento de mudar o decúbito do paciente ${paciente.nome}.\n(Recomendação: mudança a cada 2 horas)`);
+    }, 2 * 60 * 60 * 1000); // 2 horas
+    alert(`Alarme de mudança de decúbito ativado para o paciente ${paciente.nome}.`);
   } else {
-    clearInterval(alarmeIntervalo);
+    clearInterval(paciente.alarmeTimer);
     paciente.alarmeAtivo = false;
-    alert("Alarme desativado.");
+    alert(`Alarme de mudança de decúbito desativado para o paciente ${paciente.nome}.`);
   }
 }
 
@@ -155,6 +156,17 @@ function abrirHistorico(index) {
   pacienteAtualIndex = index;
   const p = pacientes[pacienteAtualIndex];
 
+  let alarmeInfo = "Alarme não ativado.";
+  if (p.alarmeAtivo && p.alarmeInicio) {
+    const agora = new Date();
+    const ativado = new Date(p.alarmeInicio);
+    const tempoHoras = Math.floor((agora - ativado) / (1000 * 60 * 60));
+    const mudancas = Math.floor(tempoHoras / 2);
+    alarmeInfo = `Alarme de Decúbito:<br>
+    Alarme ativado desde: ${ativado.toLocaleString()}<br>
+    `;
+  }
+
   const historico = `
     <strong>${p.nome}</strong><br>
     Prontuário: ${p.prontuario}<br>
@@ -163,14 +175,12 @@ function abrirHistorico(index) {
     <strong>Dispositivos:</strong> ${p.dispositivos?.join(", ") || "Não informado"}<br>
     <strong>Braden:</strong> ${p.bradenRisco || "Não avaliado"}<br>
     <strong>Lesões:</strong> ${p.lesoes?.join(", ") || "Nenhuma"}<br>
-    <strong>Tratamento Aplicado:</strong> ${p.tratamentoAplicado ? "Sim" : "Não"}
-    <strong>Conduta do Enfermeiro:</strong> ${p.conduta || "Não registrada"}<br>
-
+    <strong>Tratamento Aplicado:</strong> ${p.tratamentoAplicado ? "Sim" : "Não"}<br>
+    <strong>Conduta do Profissional:</strong> ${p.conduta || "Não registrada"}<br><br>
+    ${alarmeInfo}
   `;
 
   document.getElementById("historicoDetalhes").innerHTML = historico;
-
-  // Mostrar somente a seção do histórico
   ocultarTodasAsSecoes();
   document.querySelector(".historico-section").style.display = "block";
 }
@@ -267,7 +277,7 @@ function abrirTratamento() {
   };
 
   tratamentoConteudo.innerHTML = planos[estagio] || "<p>Tratamento não encontrado para este estágio.</p>";
-  document.getElementById("condutaEnfermeiro").value = "";
+  document.getElementById("condutaProfissional").value = "";
 
   ocultarTodasAsSecoes();
   document.querySelector(".tratamento-lesao-section").style.display = "block";
@@ -275,9 +285,9 @@ function abrirTratamento() {
 
 
 function finalizarTratamento() {
-  const conduta = document.getElementById("condutaEnfermeiro").value.trim();
+  const conduta = document.getElementById("condutaProfissional").value.trim();
   if (!conduta) {
-    alert("Descreva a conduta do enfermeiro antes de finalizar o tratamento.");
+    alert("Descreva a conduta do profissional antes de finalizar o tratamento.");
     return;
   }
 
